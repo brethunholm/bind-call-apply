@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Bind Call and Apply!</title>
+  <link rel="stylesheet" href="../base.css">
+</head>
+
+<body>
+  <p>Hey</p>
+  <button>Click me</button>
+  <div class="wrapper">
+    <p>I am inside a wrapper</p>
+  </div>
+  <script>
+    const person = {
+      name: 'Bre Thunholm',
+      sayHi() {
+        console.log(this);
+        // ^ this is = to person object
+        console.log(`Hey ${this.name}`);
+        return `Hey ${this.name}`;
+      },
+    };
+
+    // const { sayHi } = person;
+    // console.log(sayHi);
+    // this ^ == window because it isn't bond to anything on the left hand side
+    // this keyword is always defined by where the function is called not where it was defined
+    // .bind keyword can be used to change what .this is equal to
+
+    const luke = { name: 'Luke' };
+
+    const sayHi = person.sayHi.bind(luke);
+
+    // Query selector example
+    // by calling bind against query selector, we say when the $
+    // function is run use 'document' as the 'this' value
+    const $ = document.querySelector.bind(document);
+    const lookFor = document.querySelectorAll.bind(document);
+
+    const wrapper = document.querySelector('.wrapper');
+    const p = wrapper.querySelector('p');
+    console.log(p);
+    console.log($('p'));
+    console.log(lookFor('p'));
+
+    const bill = {
+      total: 1000,
+      calculate(taxRate) {
+        return this.total + this.total * taxRate;
+      },
+      describe(mealType, drinkType, taxRate) {
+        console.log(
+          `Your meal of ${mealType} with a drink of ${drinkType} was ${this.calculate(
+            taxRate
+          )}`
+        );
+      },
+    };
+    const total = bill.calculate(0.13);
+    // batteries included ==> pre install arugments of function
+    const calc = bill.calculate.bind({ total: 500 }, 0.06);
+    // .bind(this, arguments of function)
+
+    // .call does the same thing as .bind but also calls the function for you
+    const total2 = bill.calculate.call({ total: 500 }, 0.06);
+    console.log(total2);
+
+    // use .bind if you need to bind a function and call it later
+
+    // .apply pass arguments as an array
+
+    const total3 = bill.calculate.apply({ total: 300 }, [0.6]);
+
+    const myMeal = bill.describe.call(bill, 'pizza', 'soda', 0.14);
+    const myMeal2 = bill.describe.apply(bill, ['pizza', 'soda', 0.14]);
+  </script>
+</body>
+
+</html>
